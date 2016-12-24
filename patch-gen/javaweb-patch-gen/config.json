@@ -1,0 +1,34 @@
+{
+
+
+
+
+  "workspace": {
+    "path": "./",
+    "base_build": {
+      "purge": true
+    },
+    "dest_build": {
+      "purge": true
+    },
+    "patch": {
+      "purge": true
+    }
+  },
+
+  "vcs": [
+    { "working_copy": "conf", "url": "http://10.10.10.176:88/svn/accountcenter/Devconf/maven/" },
+    { "working_copy": "common", "url": "http://10.10.10.176:88/svn/accountcenter/Code/accountcenter/branches/2.9.7.4/common" },
+    { "working_copy": "common", "url": "http://10.10.10.176:88/svn/accountcenter/Code/accountcenter/branches/2.9.7.4/common" }
+  ],
+
+  "build": {
+    "mvn_setting": "conf/settings.xml",
+
+  },
+
+  "cmp": {
+
+  }
+
+}
