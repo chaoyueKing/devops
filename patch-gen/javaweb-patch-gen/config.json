@@ -1,34 +1,47 @@
 {
 
-
-
-
   "workspace": {
-    "path": "./",
-    "base_build": {
-      "purge": true
+    "path": "./workspace"
+  },
+
+  "approaches": [
+
+    {
+      "processor": "VCSProcessor",
+      "ignore": false,
+      "configuration": {
+        "working_copy": [
+          { "dir": "conf", "url": "http://10.10.10.176:88/svn/accountcenter/Devconf/maven/" },
+          { "dir": "common", "url": "http://10.10.10.176:88/svn/accountcenter/Code/accountcenter/branches/2.9.7.4/common" },
+          { "dir": "suss", "url": "http://10.10.10.176:88/svn/accountcenter/Code/accountcenter/branches/2.9.7.4/common" },
+          { "dir": "scos", "url": "http://10.10.10.176:88/svn/accountcenter/Code/accountcenter/branches/2.9.7.4/common" }
+        ]
+      }
     },
-    "dest_build": {
-      "purge": true
+
+    {
+      "processor": "BUILDProcessor",
+      "ignore": false,
+      "configuration": {
+        "mvn_setting": "conf/settings.xml",
+        "builds": [
+          { "lp": "clean install", "path": "common" },
+          { "lp": "clean install", "path": "suss" },
+          { "lp": "clean install", "path": "scos" }
+        ]
+      }
     },
-    "patch": {
-      "purge": true
+
+    {
+      "processor": "PATCHProcessor",
+      "ignore": false,
+      "configuration": {
+        "base_path": "base",
+        "dest_path": "dest",
+        "output_path": "output"
+      }
     }
-  },
 
-  "vcs": [
-    { "working_copy": "conf", "url": "http://10.10.10.176:88/svn/accountcenter/Devconf/maven/" },
-    { "working_copy": "common", "url": "http://10.10.10.176:88/svn/accountcenter/Code/accountcenter/branches/2.9.7.4/common" },
-    { "working_copy": "common", "url": "http://10.10.10.176:88/svn/accountcenter/Code/accountcenter/branches/2.9.7.4/common" }
-  ],
-
-  "build": {
-    "mvn_setting": "conf/settings.xml",
-
-  },
-
-  "cmp": {
-
-  }
+  ]
 
 }
