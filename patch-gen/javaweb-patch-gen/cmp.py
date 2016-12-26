@@ -3,11 +3,14 @@ import os
 import shutil
 import json
 import subprocess
+import sys
 
 
 def main():
 
-    config = json.load(open('config.json'))
+    project_type = read_project_type()
+
+    config = json.load(open(project_type + '.json'))
 
     init_workspace(config['workspace'])
 
@@ -18,11 +21,24 @@ def main():
         processor = processor_class(config['workspace']['path'], approach['configuration'])
         processor.process()
 
+    print('******* 重要声明 *******')
+    print('此脚本为学习分享所写，由此脚本生成的 patch 造成的生产环境故障，与作者无关。')
+
 
 # initialize workspace directory (just clean the directory)
 def init_workspace(config):
     if not os.path.exists(config['path']):
         os.makedirs(config['path'])
+
+# read project type via argument
+def read_project_type():
+    if len(sys.argv) != 2:
+        print('missing project type argument.')
+        print('for example: py cmp.py suss')
+        raise
+    else:
+        return sys.argv[1]
+
 
 # abstract processor
 class Processor:
@@ -47,7 +63,16 @@ class VCSProcessor(Processor):
         self.config = config
 
     def do_process(self):
-        print('aaaaaaaaaaaaaa')
+        for working_copy in self.config['working_copies']:
+            path = os.path.join(self.workspace_path, working_copy['path'])
+            if os.path.exists(path):
+                shutil.rmtree(path)
+                os.makedirs(path)
+            else:
+                os.makedirs(path)
+            cmd = 'svn export --force ' + working_copy['url'] + ' ' + path
+            print('#', cmd)
+            subprocess.run(cmd, shell=True)
 
 
 
@@ -64,8 +89,8 @@ class BUILDProcessor(Processor):
             cmd = 'mvn -s ' + os.path.join(self.workspace_path, self.config['mvn_setting'])
             cmd += ' -f ' + os.path.join(self.workspace_path, build['path'], 'pom.xml')
             cmd += ' ' + build['lp']
-            subprocess.run(cmd)
-
+            print('#', cmd)
+            subprocess.run(cmd, shell=True)
 
 
 # PROCESSOR: PATCHProcessor
@@ -78,6 +103,9 @@ class PATCHProcessor(Processor):
         self.handlers = [
             self._diff_output_handler
         ]
+
+
+
 
 
     def do_process(self):
@@ -142,5 +170,41 @@ class PATCHProcessor(Processor):
             if os.path.isfile(item_dest_path):
                 print('[A]', item_output_path)
                 shutil.copyfile(item_dest_path, item_output_path)
+
+
+def onerror(func, path, exc_info):
+    import stat
+    if not os.access(path, os.W_OK):
+        # Is the error an access error ?
+        os.chmod(path, stat.S_IWUSR)
+        func(path)
+    else:
+        raise
+
+def readonly_handler(func, path, execinfo):
+    os.chmod(path, 128) #or os.chmod(path, stat.S_IWRITE) from "stat" module
+    func(path)
+
+def errorRemoveReadonly(func, path, exc):
+    excvalue = exc[1]
+    import stat
+    import errno
+    if func in (os.rmdir, os.remove) and excvalue.errno == errno.EACCES:
+        # change the file to be readable,writable,executable: 0777
+        os.chmod(path, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
+        # retry
+        func(path)
+    else:
+        raise
+
+
+def on_rm_error( func, path, exc_info):
+    import stat
+    # path contains the path of the file that couldn't be removed
+    # let's just assume that it's read-only and unlink it.
+    os.chmod( path, stat.S_IWRITE )
+    os.unlink( path )
+
+
 
 main()

@@ -1,44 +1,46 @@
 {
 
   "workspace": {
-    "path": "./workspace"
+    "path": "C:/Users/watertao/Desktop/workspace"
   },
 
   "approaches": [
 
     {
       "processor": "VCSProcessor",
-      "ignore": false,
+      "ignore": true,
       "configuration": {
-        "working_copy": [
-          { "dir": "conf", "url": "http://10.10.10.176:88/svn/accountcenter/Devconf/maven/" },
-          { "dir": "common", "url": "http://10.10.10.176:88/svn/accountcenter/Code/accountcenter/branches/2.9.7.4/common" },
-          { "dir": "suss", "url": "http://10.10.10.176:88/svn/accountcenter/Code/accountcenter/branches/2.9.7.4/common" },
-          { "dir": "scos", "url": "http://10.10.10.176:88/svn/accountcenter/Code/accountcenter/branches/2.9.7.4/common" }
+        "working_copies": [
+          { "path": "conf/maven", "url": "http://10.10.10.176:88/svn/accountcenter/Devconf/maven" },
+          { "path": "base/common", "url": "http://10.10.10.176:88/svn/accountcenter/Code/accountcenter/branches/2.9.7.4/common" },
+          { "path": "base/suss", "url": "http://10.10.10.176:88/svn/accountcenter/Code/accountcenter/branches/2.9.7.4/suss" },
+          { "path": "dest/common", "url": "http://10.10.10.176:88/svn/accountcenter/Code/accountcenter/branches/2.9.7.5/common" },
+          { "path": "dest/suss", "url": "http://10.10.10.176:88/svn/accountcenter/Code/accountcenter/branches/2.9.7.5/suss" }
         ]
       }
     },
 
     {
       "processor": "BUILDProcessor",
-      "ignore": false,
+      "ignore": true,
       "configuration": {
-        "mvn_setting": "conf/settings.xml",
+        "mvn_setting": "conf/maven/settings.xml",
         "builds": [
-          { "lp": "clean install", "path": "common" },
-          { "lp": "clean install", "path": "suss" },
-          { "lp": "clean install", "path": "scos" }
+          { "lp": "clean install -Dmaven.test.skip=true", "path": "base/common" },
+          { "lp": "clean install -Dmaven.test.skip=true", "path": "base/suss" },
+          { "lp": "clean install -Dmaven.test.skip=true", "path": "dest/common" },
+          { "lp": "clean install -Dmaven.test.skip=true", "path": "dest/suss" }
         ]
       }
     },
 
     {
       "processor": "PATCHProcessor",
-      "ignore": false,
+      "ignore": true,
       "configuration": {
-        "base_path": "base",
-        "dest_path": "dest",
-        "output_path": "output"
+        "base_path": "base/suss/securities-bp-suss/target/securities-bp-suss-0.0.1-SNAPSHOT",
+        "dest_path": "dest/suss/securities-bp-suss/target/securities-bp-suss-0.0.1-SNAPSHOT",
+        "output_path": "output/suss"
       }
     }
 
