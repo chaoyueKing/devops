@@ -1,14 +1,14 @@
 {
 
   "workspace": {
-    "path": "C:/Users/watertao/Desktop/workspace"
+    "path": "./workspace"
   },
 
   "approaches": [
 
     {
       "processor": "VCSProcessor",
-      "ignore": false,
+      "ignore": true,
       "configuration": {
         "working_copies": [
           { "path": "conf/maven", "url": "http://10.10.10.176:88/svn/accountcenter/Devconf/maven" },
@@ -22,7 +22,7 @@
 
     {
       "processor": "BUILDProcessor",
-      "ignore": false,
+      "ignore": true,
       "configuration": {
         "mvn_setting": "conf/maven/settings.xml",
         "builds": [
@@ -40,7 +40,8 @@
       "configuration": {
         "base_path": "base/suss/securities-bp-suss/target/securities-bp-suss-0.0.1-SNAPSHOT",
         "dest_path": "dest/suss/securities-bp-suss/target/securities-bp-suss-0.0.1-SNAPSHOT",
-        "output_path": "output/suss"
+        "output_path": "output/suss",
+        "patchfile_path": "output/patch.txt"
       }
     }
 

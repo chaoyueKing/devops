@@ -1,7 +1,7 @@
 {
 
   "workspace": {
-    "path": "C:/Users/watertao/Desktop/workspace"
+    "path": "./workspace"
   },
 
   "approaches": [
@@ -44,7 +44,8 @@
       "configuration": {
         "base_path": "base/scos/securities-bp-scos/target/securities-bp-scos-0.0.1-SNAPSHOT",
         "dest_path": "dest/scos/securities-bp-scos/target/securities-bp-scos-0.0.1-SNAPSHOT",
-        "output_path": "output/scos"
+        "output_path": "output/scos",
+        "patchfile_path": "output/patch.txt"
       }
     }
 

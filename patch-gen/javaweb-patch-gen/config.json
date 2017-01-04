@@ -40,7 +40,8 @@
       "configuration": {
         "base_path": "base/suss/securities-bp-suss/target/securities-bp-suss-0.0.1-SNAPSHOT",
         "dest_path": "dest/suss/securities-bp-suss/target/securities-bp-suss-0.0.1-SNAPSHOT",
-        "output_path": "output/suss"
+        "output_path": "output/suss",
+        "patchfile_path": "output/patch.txt"
       }
     }
 

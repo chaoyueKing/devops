@@ -4,6 +4,7 @@ import shutil
 import json
 import subprocess
 import sys
+import logging
 
 
 def main():
@@ -14,27 +15,49 @@ def main():
 
     init_workspace(config['workspace'])
 
+    global logfile
+    logfile = open(os.path.join(config['workspace']['path'], 'log.txt'), 'w')
+
+    init_logging_framework(logfile)
+
+    logging.info('Workspace: [ %s ]  ( %s )',
+                 config['workspace']['path'],
+                 'you can remove the workspace directory to clear workspace')
+
     for approach in config['approaches']:
         if approach['ignore']:
+            logging.info('Ignore processor: [ %s ]  ( %s )',
+                         approach['processor'],
+                         'you can change the ignore property to false in configuration file for recover this processor')
             continue
         processor_class = eval(approach['processor'])
         processor = processor_class(config['workspace']['path'], approach['configuration'])
         processor.process()
 
-    print('******* 重要声明 *******')
-    print('此脚本为学习分享所写，由此脚本生成的 patch 造成的生产环境故障，与作者无关。')
+    logging.info('******************************* IMPORT DECLARATION *******************************')
+    logging.info('This script is writing for studying and sharing.')
+    logging.info('The author of this script is no responsible for any problem caused by this script.')
+    logging.info('So we strongly recommended that you check the output before publish.')
+    logging.info('**********************************************************************************')
 
+def init_logging_framework(logfile):
+    handlers = [logging.StreamHandler(stream=logfile), logging.StreamHandler()]
+    logging.basicConfig(level = logging.DEBUG,
+                        format = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+                        datefmt = '%m-%d %H:%M',
+                        handlers = handlers)
 
 # initialize workspace directory (just clean the directory)
 def init_workspace(config):
     if not os.path.exists(config['path']):
         os.makedirs(config['path'])
 
+
 # read project type via argument
 def read_project_type():
     if len(sys.argv) != 2:
-        print('missing project type argument.')
-        print('for example: py cmp.py suss')
+        logging.info('missing project type argument.')
+        logging.info('for example: py cmp.py suss')
         raise
     else:
         return sys.argv[1]
@@ -44,12 +67,12 @@ def read_project_type():
 class Processor:
 
     def process(self):
-        print('-' * 37)
-        print('-', self.processor_name)
-        print('-' * 37)
+        logging.info('-' * 37)
+        logging.info('- %s', self.processor_name)
+        logging.info('-' * 37)
         self.do_process()
-        print('Done.')
-        print()
+        logging.info('Done.')
+        logging.info('')
 
     def do_process(self):
         pass
@@ -71,8 +94,8 @@ class VCSProcessor(Processor):
             else:
                 os.makedirs(path)
             cmd = 'svn export --force ' + working_copy['url'] + ' ' + path
-            print('#', cmd)
-            subprocess.run(cmd, shell=True)
+            logging.info('[ subprocess ] ' + cmd)
+            subprocess.run(cmd, shell=True, stdout=logfile)
 
 
 
@@ -89,8 +112,8 @@ class BUILDProcessor(Processor):
             cmd = 'mvn -s ' + os.path.join(self.workspace_path, self.config['mvn_setting'])
             cmd += ' -f ' + os.path.join(self.workspace_path, build['path'], 'pom.xml')
             cmd += ' ' + build['lp']
-            print('#', cmd)
-            subprocess.run(cmd, shell=True)
+            logging.info('[ subprocess ] %s', cmd)
+            subprocess.run(cmd, shell=True, stdout=logfile)
 
 
 # PROCESSOR: PATCHProcessor
@@ -105,14 +128,12 @@ class PATCHProcessor(Processor):
         ]
 
 
-
-
-
     def do_process(self):
 
         base_path = os.path.join(self.workspace_path, self.config['base_path'])
         dest_path = os.path.join(self.workspace_path, self.config['dest_path'])
         output_path = os.path.join(self.workspace_path, self.config['output_path'])
+        patchfile_path = os.path.join(self.workspace_path, self.config['patchfile_path'])
 
         if not os.path.exists(base_path):
             raise Exception('missing base path: ' + base_path)
@@ -123,12 +144,15 @@ class PATCHProcessor(Processor):
         else:
             shutil.rmtree(output_path)
             os.makedirs(output_path)
+        self.patchfile = open(patchfile_path, 'w')
 
         self._cmp_dir(
             base_path,
             dest_path,
             output_path
         )
+
+        self.patchfile.close()
 
 
     def _cmp_dir(self, base_path, dest_path, output_path):
@@ -155,7 +179,8 @@ class PATCHProcessor(Processor):
             os.makedirs(output_path)
 
         for file in cmp_result['diff_files']:
-            print('[U]', os.path.join(output_path, file))
+            logging.info('[U] %s', os.path.join(output_path, file))
+            self.patchfile.write('[U] ' + os.path.join(output_path, file) + '\n')
             shutil.copyfile(
                 os.path.join(dest_path, file),
                 os.path.join(output_path, file)
@@ -165,10 +190,12 @@ class PATCHProcessor(Processor):
             item_dest_path = os.path.join(dest_path, item)
             item_output_path = os.path.join(output_path, item)
             if os.path.isdir(item_dest_path):
-                print('[A]', os.path.join(item_output_path, '*'))
+                logging.info('[A] %s', os.path.join(item_output_path, '*'))
+                self.patchfile.write('[A] ' + os.path.join(item_output_path, '*') + '\n')
                 shutil.copytree(item_dest_path, item_output_path)
             if os.path.isfile(item_dest_path):
-                print('[A]', item_output_path)
+                logging.info('[A] %s', item_output_path)
+                self.patchfile.write('[A] ' + item_output_path + '\n')
                 shutil.copyfile(item_dest_path, item_output_path)
 
 
