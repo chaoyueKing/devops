@@ -1,0 +1,36 @@
+{
+
+  "workspace": {
+    "path": "/Users/watertao/Temp/workspace"
+  },
+
+  "vcs": {
+    "ignore": true,
+    "working_copies": [
+      { "remote": "", "local": "./" }
+    ]
+  },
+
+  "build_checkers":[
+    {
+      "ignore": false,
+      "processor": "dummy",
+      "configuration": {
+
+      }
+    }
+  ],
+
+
+  "scan_comparers": [
+    {
+      "processor": "dummy",
+      "ignore": false,
+      "configuration": {
+
+      }
+    }
+  ]
+
+}
+

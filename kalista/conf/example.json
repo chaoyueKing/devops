@@ -1,0 +1,54 @@
+{
+
+  "workspace": {
+    "path": "~/Temp/workspace"
+  },
+
+  "vcs": {
+    "ignore": true,
+    "working_copies": [
+      { "remote": "http://xxxxx", "local": "./" }
+    ]
+  },
+
+  "build_checkers":[
+    {
+      "ignore": true,
+      "processor": "javawebapp",
+      "configuration": {
+        "mvn_setting": "maven/settings.xml",
+        "builds": [
+          { "pom": "common/pom.xml" }
+        ],
+        "checks": [
+          {
+            "assemble": "constant.jar",
+            "build": "common/securities-bs-common-constant/target/securities-bs-common-constant-0.0.1-SNAPSHOT.jar"
+          }
+        ]
+      }
+    }
+  ],
+
+
+  "scan_comparers": [
+    {
+      "processor": "raw",
+      "ignore": false,
+      "configuration": {
+        "filter": [".DS_Store"]
+      }
+    },
+    {
+      "processor": "sqlmap",
+      "ignore": false,
+      "configuration": {
+        "conf_path": [
+          "common/sqlmap/"
+        ]
+      }
+    }
+  ]
+
+}
+

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+
+        * {
+            font-family: "Courier New", sans-serif;
+            font-size: 11px;
+        }
+
+        body {
+            background-color: #EEEEEE;
+        }
+
+        div.container {
+            margin: 20px;
+            width: 1420px;
+        }
+
+        div.file_name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        div.code>div {
+            float: left;
+        }
+
+        div.left_line_num,div.right_line_num {
+            width: 20px;
+            background-color: #DDDDDD;
+            border-top: 1px solid #CCCCCC;
+            border-left: 1px solid #CCCCCC;
+            border-bottom: 1px solid #CCCCCC;
+            text-align: center;
+            padding: 10px 0 10px 0;
+        }
+
+        div.right_line_num {
+            margin-left: 10px;
+        }
+
+
+        div.left_code,div.right_code {
+            border: 1px solid #CCCCCC;
+            padding: 10px;
+            background-color: #FFFFFF;
+            width: 630px;
+            overflow-x: auto;
+            word-break:keep-all;
+            white-space:nowrap;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="file_name">$file</div>
+        <div class="code">
+            <div class="left_line_num">$left_line_num</div>
+            <div class="left_code">$left_code</div>
+            <div class="right_line_num">$right_line_num</div>
+            <div class="right_code">$right_code</div>
+        </div>
+
+    </div>
+
+</body>
+</html>
