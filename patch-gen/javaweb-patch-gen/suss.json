@@ -1,7 +1,7 @@
 {
 
   "workspace": {
-    "path": "C:/Users/watertao/Desktop/workspace"
+    "path": "./workspace"
   },
 
   "approaches": [
@@ -36,7 +36,7 @@
 
     {
       "processor": "PATCHProcessor",
-      "ignore": true,
+      "ignore": false,
       "configuration": {
         "base_path": "base/suss/securities-bp-suss/target/securities-bp-suss-0.0.1-SNAPSHOT",
         "dest_path": "dest/suss/securities-bp-suss/target/securities-bp-suss-0.0.1-SNAPSHOT",
