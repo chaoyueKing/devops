@@ -1,7 +1,7 @@
 {
 
   "workspace": {
-    "path": "~/Temp/workspace"
+    "path": "/Users/watertao/Temp/workspace"
   },
 
   "vcs": {
@@ -34,17 +34,26 @@
   "scan_comparers": [
     {
       "processor": "raw",
-      "ignore": false,
+      "ignore": true,
       "configuration": {
         "filter": [".DS_Store"]
       }
     },
     {
       "processor": "sqlmap",
-      "ignore": false,
+      "ignore": true,
       "configuration": {
         "conf_path": [
           "common/sqlmap/"
+        ]
+      }
+    },
+    {
+      "processor": "struts",
+      "ignore": false,
+      "configuration": {
+        "conf_path": [
+          "cairh-htsec-community-backend/src/main/resources/struts.xml"
         ]
       }
     }
