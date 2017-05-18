@@ -149,10 +149,10 @@ class ScanComparer(AbstractScanComparer):
                 base_elem_list = []
                 artifact_elem_list = []
                 for child in base_xml_tree.getroot():
-                    if child.tag == 'sql' or child.tag == 'select' or child.tag == 'delete' or child.tag == 'insert':
+                    if child.tag == 'sql' or child.tag == 'select' or child.tag == 'delete' or child.tag == 'insert' or child.tag == 'update':
                         base_elem_list.append(child)
                 for child in artifact_xml_tree.getroot():
-                    if child.tag == 'sql' or child.tag == 'select' or child.tag == 'delete' or child.tag == 'insert':
+                    if child.tag == 'sql' or child.tag == 'select' or child.tag == 'delete' or child.tag == 'insert' or child.tag == 'update':
                         artifact_elem_list.append(child)
                 i = 0
                 for bitem in base_elem_list:
@@ -270,16 +270,16 @@ class ScanComparer(AbstractScanComparer):
         for entry in index_td_arry:
             logging.info('[%s] [ - %s - %s.%s ] %s' % (entry['change_type'], entry['elem_type'], entry['namespace'], entry['id'], entry['file']))
             tbody_arry.append(
-                '<tr><td><span class="label_%s">%s</span></td><td>%s</td><td>%s</td><td>%s</td><td><a href="%s">%s</a></td></tr>'
-                % (
-                    entry['change_type'],
-                    self.__convert_change_type_label(entry['change_type']),
-                    entry['namespace'],
-                    entry['elem_type'],
-                    entry['id'],
-                    './data/%s.html' % entry['file_id'],
-                    entry['file']
-                )
+                    '<tr><td><span class="label_%s">%s</span></td><td>%s</td><td>%s</td><td>%s</td><td><a href="%s">%s</a></td></tr>'
+                    % (
+                        entry['change_type'],
+                        self.__convert_change_type_label(entry['change_type']),
+                        entry['namespace'],
+                        entry['elem_type'],
+                        entry['id'],
+                        './data/%s.html' % entry['file_id'],
+                        entry['file']
+                    )
             )
 
         index_stream = open(os.path.join(self.output_path, 'index.html'), 'w')
