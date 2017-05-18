@@ -139,15 +139,18 @@ class ScanComparer(AbstractScanComparer):
             self.file_id_cnt += 1
             self.change_list.append([type, file_id, path])
             dest = os.path.join(self.data_output_path, str(file_id) + '.html')
+
             file_stream = open(whole_path, 'r')
             file_content = file_stream.read()
             file_stream.close()
-            file_content.replace('\n', '<br/>')
+            file_content = file_content.replace('\n', '<br/>')
             html_stream = open(dest, 'w')
             html_stream.write(Template(self.template_single).substitute(code=file_content, file=path))
             html_stream.close()
         elif os.path.isdir(whole_path):
             for entry in os.listdir(whole_path):
+                if entry in self.filter:
+                    continue
                 self._d_a_handler(type, prefix_path, os.path.join(path, entry))
 
 def xml_compare(x1, x2):
