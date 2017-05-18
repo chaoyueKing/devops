@@ -177,7 +177,7 @@ class ScanComparer(AbstractScanComparer):
                 for item in right_actions:
                     artifact_only_dict[package_name].append({
                         'cmp': 'A',
-                        'name': aitem.get('name'),
+                        'name': item.get('name'),
                         'elem': item,
                         'file': os.path.join(base_path_prefix, entry)
                     })
